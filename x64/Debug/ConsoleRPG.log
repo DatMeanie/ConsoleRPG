@@ -1,2 +1,33 @@
-﻿  ConsoleRPG.cpp
-  ConsoleRPG.vcxproj -> C:\Coding\ConsoleRPG\x64\Debug\ConsoleRPG.exe
+﻿  Actions.cpp
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(14,14): error C2065:  'Action': undeclared identifier
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(14,21): error C2059:  syntax error: '>'
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(20,14): error C2065:  'Action': undeclared identifier
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(20,21): error C2059:  syntax error: '>'
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(26,14): error C2065:  'Action': undeclared identifier
+  Common.cpp
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(26,21): error C2059:  syntax error: '>'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(9,36): error C2061:  syntax error: identifier 'Player'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(17,28): error C2061:  syntax error: identifier 'Player'
+  ConsoleRPG.cpp
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(24,28): error C2061:  syntax error: identifier 'Player'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(9,36): error C2061:  syntax error: identifier 'Player'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(17,28): error C2061:  syntax error: identifier 'Player'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(24,28): error C2061:  syntax error: identifier 'Player'
+C:\Coding\ConsoleRPG\ConsoleRPG\ConsoleRPG.cpp(99,51): error C2660:  'Action::EffectActivate': function does not take 2 arguments
+  Enemies.cpp
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(9,15): message :  see declaration of 'Action::EffectActivate'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(9,36): error C2061:  syntax error: identifier 'Player'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(17,28): error C2061:  syntax error: identifier 'Player'
+  Heroes.cpp
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(24,28): error C2061:  syntax error: identifier 'Player'
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(14,14): error C2065:  'Action': undeclared identifier
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(14,21): error C2059:  syntax error: '>'
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(20,14): error C2065:  'Action': undeclared identifier
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(20,21): error C2059:  syntax error: '>'
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(26,14): error C2065:  'Action': undeclared identifier
+  Items.cpp
+C:\Coding\ConsoleRPG\ConsoleRPG\Heroes.h(26,21): error C2059:  syntax error: '>'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(9,36): error C2061:  syntax error: identifier 'Player'
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(17,28): error C2061:  syntax error: identifier 'Player'
+  Generating Code...
+C:\Coding\ConsoleRPG\ConsoleRPG\Actions.h(24,28): error C2061:  syntax error: identifier 'Player'

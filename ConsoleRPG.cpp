@@ -6,233 +6,71 @@
 #include <time.h>
 #include <cstring>
 #include <sstream>
-
+#include "Common.h"
+#include "Heroes.h"
+#include "Enemies.h"
+#include "Items.h"
+#include "Actions.h"
 using namespace std;
 
-void EnterToContinue() { //empty input function, restrict flow of information
-	cin.ignore(100, '\n');
-	string input;
-	getline(cin, input);
-}
-
-// ENEMY CLASSES
-class Enemy {
-protected:
-	int minAttack, maxAttack;
-public:
-	string name;
-	int health;
-	//vector<Item*> dropList;
-	virtual int Attack(); //attack player
-	virtual void PrintStats(); //print stats
-	virtual void ResetStats(); //stats back to default
-	void Die() { //print out enemy died
-		//cout << name << " dropped " << dropList[rand() % dropList.size()]->name << "!" << endl;
-		system("cls"); //clear console
-		cout << name << " has died!" << endl;
-		EnterToContinue();
-	}
-};
-
-class Minotaur : public Enemy {
-public:
-	Minotaur() {
-		name = "Minotaur";
-		health = 200;
-		minAttack = 10;
-		maxAttack = 20;
-		//dropList.push_back(new HealthPotion("Healing potion", "Heals you for 50 health", 50));
-	}
-	 int Attack() override {
-		srand(unsigned(time(0))); //time to randomize new value
-		int damage = rand() % maxAttack + minAttack; // random attack value
-		return damage;
-	}
-	void PrintStats() override {
-		cout << name << "\n\nHealth: " << health << "\n"<< endl;
-	}
-	void ResetStats() override {
-		name = "Minotaur";
-		health = 200;
-		minAttack = 10;
-		maxAttack = 20;
-	}
-};
-
-// PLAYER CLASSES
-
-class Hero {
-public:
-	string name;
-	int health, stamina, mana, staminaRegen, manaRegen;
-};
-
-class Player {
-public:
-	//STATS
-	string name;
-	int health, stamina, mana, maxHealth, maxStamina, maxMana, staminaRegen, manaRegen;
-	
-	void CreateCharacter(Hero hero) {
-		name = hero.name;
-		maxHealth = hero.health;
-		health = maxHealth;
-		maxStamina = hero.stamina;
-		stamina = maxStamina;
-		maxMana = hero.mana;
-		mana = maxMana;
-		staminaRegen = hero.staminaRegen;
-		manaRegen = hero.manaRegen;
-	}
-	void PrintStats() {
-		cout << name << "\n\nHealth: " << health << "\nStamina: " << stamina << "\nMana: " << mana << "\n" << endl;
-	}
-};
-
-// ITEM CLASSES
-
-class Item {
-public:
-	string name, desc, used;
-	virtual void EffectActivate(Player& p, Enemy& e);
-};
-
-class HealthPotion : public Item{ //basic health potion
-public:
-	int recover;
-	HealthPotion(string _name, string _desc, string _used, int _recover) {
-		name = _name;
-		desc = _desc;
-		used = _used;
-		recover = _recover;
-	}
-	void EffectActivate(Player& p, Enemy& e)
-	{
-		if (p.health < p.maxHealth - recover) {
-			p.health += recover;
-		}
-		else {
-			p.health = 100;
-		}
-	}
-};
-
-// ATTACK CLASSES
-
-class Action { //Actions = what a player can do in a turn (excluding using items)
-public:
-	string name, desc;
-	int staminaCost, manaCost;
-	virtual void EffectActivate(Player& p, Enemy& e);
-	virtual void ToString();
-};
-
-class Attack : public Action { //basic attack
-public:
-	int damage;
-	Attack(string _name, string _desc, int _damage, int _staminaCost, int _manaCost) {
-		name = _name;
-		desc = _desc;
-		damage = _damage;
-		staminaCost = _staminaCost;
-		manaCost = _manaCost;
-	}
-	void EffectActivate(Player& p, Enemy& e) {
-		if (p.stamina >= staminaCost && p.mana >= manaCost) { //if player has enough stamina or mana
-			e.health -= damage; //enemy takes damage
-			p.stamina -= staminaCost; //take player stamina
-			p.mana -= manaCost; //take player stamina
-		}
-		else {
-			cout << "Not enough stamina or mana! You did nothing instead" << endl;
-			EnterToContinue();
-		}
-	}
-};
-
-class Heal : public Action { //basic heal
-public:
-	int recover;
-	Heal(string _name, string _desc, int _recover, int _staminaCost, int _manaCost) {
-		name = _name;
-		desc = _desc;
-		recover = _recover;
-		staminaCost = _staminaCost;
-		manaCost = _manaCost;
-	}
-	void EffectActivate(Player& p, Enemy& e) {
-		if (p.stamina >= staminaCost && p.mana >= manaCost) { //if player has enough stamina or mana
-			p.health += recover; //player recover health
-			if (p.health > p.maxHealth) { //if health is above max health
-				p.health = p.maxHealth; //reset to max health
-			}
-			p.stamina -= staminaCost; //take player stamina
-			p.mana -= manaCost; //take player mana
-		}
-		else {
-			cout << "Not enough stamina or mana! You did nothing instead" << endl;
-			EnterToContinue();
-		}
-	}
-};
 // HERO CLASSES 
-class Spellsword : public Hero {
-public:
-	vector<Action*> actions; //possible player actions
-	Spellsword(string _name) {
-		//SET STATS
-		name = _name + " The Spellsword"; 
-		health = 100;
-		stamina = 100;
-		mana = 100;
-		staminaRegen = 10;
-		manaRegen = 10;
-		//ADD POSSIBLE PLAYER ACTIONS
-		actions.push_back(new Attack("Slash", "Attack for 10 damage", 10, 10, 0));
-		actions.push_back(new Attack("Cut", "Attack for 50 damage", 50, 40, 0));
-		actions.push_back(new Attack("Fireblast", "Attack for 10 damage", 10, 0, 10));
-		actions.push_back(new Attack("Magicbomb", "Attack for 50 damage", 50, 0, 40));
-		actions.push_back(new Heal("Strong Heal", "Heal to 100 Health", 100, 0, 20));
-		actions.push_back(new Heal("Bandage", "Heal to 100 Health", 100, 20, 0));
-	}
-};
-
-class Warrior : public Hero {
-public:
-	vector<Action*> actions; //possible player actions
-	Warrior(string _name) {
-		//SET STATS
-		name = _name + " The Warrior";
-		health = 200;
-		stamina = 200;
-		mana = 0;
-		staminaRegen = 10;
-		manaRegen = 0;
-		//ADD POSSIBLE PLAYER ACTIONS
-		actions.push_back(new Attack("Punch", "Attack for 20 damage", 20, 20, 0));
-		actions.push_back(new Attack("Crush", "Attack for 100 damage", 60, 30, 0));
-		actions.push_back(new Heal("Weak Heal", "Heal to 50 Health", 100, 20, 00));
-	}
-};
-
-class Wizard : public Hero {
-public:
-	vector<Action*> actions; //possible player actions
-	Wizard(string _name) {
-		//SET STATS
-		name = _name + " The Wizard";
-		health = 60;
-		stamina = 0;
-		mana = 200;
-		staminaRegen = 0;
-		manaRegen = 40;
-		//ADD POSSIBLE PLAYER ACTIONS
-		actions.push_back(new Attack("Waterbolt", "Attack for 20 damage", 20, 0, 40));
-		actions.push_back(new Attack("Fireball", "Attack for 100 damage", 100, 0, 80));
-		actions.push_back(new Heal("Strong Heal", "Heal to 100 Health", 100, 0, 20));
-	}
-
-};
+//class Spellsword : public Hero {
+//public:
+//	vector<Action*> actions; //possible player actions
+//	Spellsword(string _name) {
+//		//SET STATS
+//		name = _name + " The Spellsword"; 
+//		health = 100;
+//		stamina = 100;
+//		mana = 100;
+//		staminaRegen = 10;
+//		manaRegen = 10;
+//		//ADD POSSIBLE PLAYER ACTIONS
+//		actions.push_back(new Attack("Slash", "Attack for 10 damage", 10, 10, 0));
+//		actions.push_back(new Attack("Cut", "Attack for 50 damage", 50, 40, 0));
+//		actions.push_back(new Attack("Fireblast", "Attack for 10 damage", 10, 0, 10));
+//		actions.push_back(new Attack("Magicbomb", "Attack for 50 damage", 50, 0, 40));
+//		actions.push_back(new Heal("Strong Heal", "Heal to 100 Health", 100, 0, 20));
+//		actions.push_back(new Heal("Bandage", "Heal to 100 Health", 100, 20, 0));
+//	}
+//};
+//
+//class Warrior : public Hero {
+//public:
+//	vector<Action*> actions; //possible player actions
+//	Warrior(string _name) {
+//		//SET STATS
+//		name = _name + " The Warrior";
+//		health = 200;
+//		stamina = 200;
+//		mana = 0;
+//		staminaRegen = 10;
+//		manaRegen = 0;
+//		//ADD POSSIBLE PLAYER ACTIONS
+//		actions.push_back(new Attack("Punch", "Attack for 20 damage", 20, 20, 0));
+//		actions.push_back(new Attack("Crush", "Attack for 100 damage", 60, 30, 0));
+//		actions.push_back(new Heal("Weak Heal", "Heal to 50 Health", 100, 20, 00));
+//	}
+//};
+//
+//class Wizard : public Hero {
+//public:
+//	vector<Action*> actions; //possible player actions
+//	Wizard(string _name) {
+//		//SET STATS
+//		name = _name + " The Wizard";
+//		health = 60;
+//		stamina = 0;
+//		mana = 200;
+//		staminaRegen = 0;
+//		manaRegen = 40;
+//		//ADD POSSIBLE PLAYER ACTIONS
+//		actions.push_back(new Attack("Waterbolt", "Attack for 20 damage", 20, 0, 40));
+//		actions.push_back(new Attack("Fireball", "Attack for 100 damage", 100, 0, 80));
+//		actions.push_back(new Heal("Strong Heal", "Heal to 100 Health", 100, 0, 20));
+//	}
+//
+//};
 
 class Inventory {
 public:
@@ -349,20 +187,6 @@ void Battle(Enemy& enemy, Player& p, Inventory&inv) {
 	cout << "You won over " << enemy.name;
 	system("cls"); //clear console
 }
-class Room { //basic room
-private:
-	string name;
-public:
-	int x, y; //location for room
-	Room(string _name, int _x, int _y) {
-		name = _name;
-		x = _x;
-		y = _y;
-	}
-	string GetName() {
-		return name;
-	}
-};
 class MapGenerator {
 private:
 	vector<vector<Room*>> map; //contain rows of rooms
@@ -497,23 +321,4 @@ int main()
 		cout << "You encountered a minotaur!" << endl;
 		Battle(mino, p, inv);
 	}
-}
-int Enemy::Attack()
-{
-	return 0;
-}
-void Enemy::PrintStats()
-{
-}
-void Enemy::ResetStats()
-{
-}
-void Action::EffectActivate(Player&, Enemy&)
-{
-}
-void Action::ToString()
-{
-}
-void Item::EffectActivate(Player&, Enemy&)
-{
 }
